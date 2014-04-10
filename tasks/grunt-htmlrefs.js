@@ -31,9 +31,11 @@ module.exports = function(grunt) {
 	grunt.registerMultiTask('htmlrefs', 'Replaces (or removes) references to non-optimized scripts or stylesheets on HTML files', function() {
 		var options = this.options({
 			pkg: {},
-			includes: {}
+            includes: {},
+            templates : {}
 		});
 
+        var templateProcess = _.extend({}, htmlrefsTemplate, options.templates);
 		this.files.forEach(function(file) {
 			var blocks,
 				content,
@@ -62,7 +64,7 @@ module.exports = function(grunt) {
 				var raw = block.raw.join(lf);
 				var opts = _.extend({}, block, options);
 
-				var replacement = htmlrefsTemplate[block.type](opts, lf, options.includes);
+				var replacement = templateProcess[block.type](opts, lf, options.includes);
 				content = content.replace(raw, replacement);
 			});
 
